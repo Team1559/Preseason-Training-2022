@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  */
 public class Robot extends TimedRobot {
   TalonSRX motor1;
+  OperatorInterface oi;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -22,6 +23,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
   motor1 = new TalonSRX(9);
+  oi = new OperatorInterface();
   }
 
   /**
@@ -61,7 +63,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    motor1.set(ControlMode.PercentOutput, 1);
+    motor1.set(ControlMode.PercentOutput, oi.getPilotX());
   }
 
   /** This function is called once when the robot is disabled. */
