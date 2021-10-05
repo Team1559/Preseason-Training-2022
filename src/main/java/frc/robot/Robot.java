@@ -8,8 +8,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,13 +19,15 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  */
 public class Robot extends TimedRobot {
   TalonSRX motor1;
+  OperatorInterface oi;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
-    motor1 = new TalonSRX(9);
+    motor1 = new TalonSRX(7);
+    oi = new OperatorInterface();
   }
 
   /**
@@ -65,7 +67,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    if(oi.pilot.getRawButton(1))
     motor1.set(ControlMode.PercentOutput, 1);
+    
+
   }
 
   /** This function is called once when the robot is disabled. */
