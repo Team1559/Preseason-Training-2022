@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-  motor1 = new TalonSRX(9);
+  motor1 = new TalonSRX(7);
   oi = new OperatorInterface();
   }
 
