@@ -90,16 +90,18 @@ public class Robot extends TimedRobot {
       if(doSpinnySpin)
         motor3.set(ControlMode.PercentOutput, 1);
     }
-    if(oi.getPilotX() < -0.2){
-      motor1.set(ControlMode.PercentOutput, oi.getPilotX());
-      motor2.set(ControlMode.PercentOutput, Math.abs(oi.getPilotX()));
-    } else if (oi.getPilotX() > 0.2){
-      motor1.set(ControlMode.PercentOutput, oi.getPilotX());
-      motor2.set(ControlMode.PercentOutput, -oi.getPilotX());
-    } else {
-      motor1.set(ControlMode.PercentOutput, oi.getPilotY());
-      motor2.set(ControlMode.PercentOutput, oi.getPilotY());
-    }
+    // if(-oi.pilot.getRawAxis(1) < -0.2){
+    //   motor1.set(ControlMode.PercentOutput, -oi.pilot.getRawAxis(1));
+    //   motor2.set(ControlMode.PercentOutput, Math.abs(-oi.pilot.getRawAxis(1)));
+    // } else if (-oi.pilot.getRawAxis(1) > 0.2){
+    //   motor1.set(ControlMode.PercentOutput, -oi.pilot.getRawAxis(1));
+    //   motor2.set(ControlMode.PercentOutput, oi.pilot.getRawAxis(1));
+    // } else {
+    //   motor1.set(ControlMode.PercentOutput, -oi.pilot.getRawAxis(4));
+    //   motor2.set(ControlMode.PercentOutput, oi.pilot.getRawAxis(4));
+    // }
+    motor1.set(ControlMode.PercentOutput, oi.pilot.getRawAxis(4) + -oi.pilot.getRawAxis(1));
+    motor2.set(ControlMode.PercentOutput, oi.pilot.getRawAxis(4) - -oi.pilot.getRawAxis(1));
   }
 
   /** This function is called once when the robot is disabled. */
