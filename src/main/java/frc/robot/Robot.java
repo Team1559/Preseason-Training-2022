@@ -19,7 +19,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends TimedRobot {
   TalonSRX motor1;
+  TalonSRX motor2;
+  TalonSRX motor3;
+  TalonSRX motor4;
   OperatorInterface oi;
+  boolean doSpinnySpin = false;
+  boolean iCraveInfo = false;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -27,6 +32,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     motor1 = new TalonSRX(7);
+    motor2 = new TalonSRX(3);
+    if(doSpinnySpin)
+      motor3 = new TalonSRX(3); // FIXME: Need to correct ID (Spinner motor)
+    if(iCraveInfo)
+      motor4 = new TalonSRX(3); // FIXME: Need to correct ID (input motor)
     oi = new OperatorInterface();
   }
 
@@ -65,12 +75,31 @@ public class Robot extends TimedRobot {
   public void teleopInit() {}
 
   /** This function is called periodically during operator control. */
+
+  // (vl-mn)/(mx-mn)*(nmx - nmn) + nmn
+
+  public static double map(double value, double min, double max, double newmin, double newmax){
+    return (value-min) / (max-min) * (newmax - newmin) + newmin;
+  }
+
   @Override
   public void teleopPeriodic() {
-    if(oi.pilot.getRawButton(1))
-    motor1.set(ControlMode.PercentOutput, 1);
-    
-
+    if(oi.pilot.getRawButton(1)){
+      if(iCraveInfo)
+        motor4.set(ControlMode.PercentOutput, 0.2);
+      if(doSpinnySpin)
+        motor3.set(ControlMode.PercentOutput, 1);
+    }
+    if(oi.getPilotX() < -0.2){
+      motor1.set(ControlMode.PercentOutput, oi.getPilotX());
+      motor2.set(ControlMode.PercentOutput, Math.abs(oi.getPilotX()));
+    } else if (oi.getPilotX() > 0.2){
+      motor1.set(ControlMode.PercentOutput, oi.getPilotX());
+      motor2.set(ControlMode.PercentOutput, -oi.getPilotX());
+    } else {
+      motor1.set(ControlMode.PercentOutput, oi.getPilotY());
+      motor2.set(ControlMode.PercentOutput, oi.getPilotY());
+    }
   }
 
   /** This function is called once when the robot is disabled. */
