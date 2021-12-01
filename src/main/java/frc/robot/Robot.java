@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     motor1 = new TalonSRX(7);
-    motor2 = new TalonSRX(3);
+    motor2 = new TalonSRX(1);
     if(doSpinnySpin)
       motor3 = new TalonSRX(3); // FIXME: Need to correct ID (Spinner motor)
     if(iCraveInfo)
