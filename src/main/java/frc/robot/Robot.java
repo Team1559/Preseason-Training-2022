@@ -29,9 +29,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        this.oi = new OperatorInterface();
         this.leftFront = new TalonSRX(1);
-        this.rightFront = new TalonSRX(7);
         this.leftFront.setInverted(true);
+        this.rightFront = new TalonSRX(7);
         //this.leftRear = new TalonSRX(2);
         //this.rightRear = new TalonSRX(3);
     }
