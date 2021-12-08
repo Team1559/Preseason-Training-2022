@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 public class Robot extends TimedRobot {
     TalonSRX          leftFront;
     TalonSRX          rightFront;
-    TalonSRX          leftRear;
-    TalonSRX          rightRear;
+    //TalonSRX          leftRear;
+    //TalonSRX          rightRear;
     OperatorInterface oi;
 
     /**
@@ -29,10 +29,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        this.leftFront = new TalonSRX(0);
-        this.rightFront = new TalonSRX(1);
-        this.leftRear = new TalonSRX(2);
-        this.rightRear = new TalonSRX(3);
+        this.leftFront = new TalonSRX(1);
+        this.rightFront = new TalonSRX(7);
+        this.leftFront.setInverted(true);
+        //this.leftRear = new TalonSRX(2);
+        //this.rightRear = new TalonSRX(3);
     }
 
     /**
@@ -79,6 +80,7 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
+        // arcade drive
         double leftStickY = oi.pilot.getRawAxis(1);
         double rightStickX = oi.pilot.getRawAxis(2);
         double leftDriveValue;
@@ -104,9 +106,9 @@ public class Robot extends TimedRobot {
             rightDriveValue = leftStickY;
         }
         this.leftFront.set(ControlMode.PercentOutput, leftDriveValue);
-        this.leftRear.set(ControlMode.PercentOutput, leftDriveValue);
+        //this.leftRear.set(ControlMode.PercentOutput, leftDriveValue);
         this.rightFront.set(ControlMode.PercentOutput, rightDriveValue);
-        this.rightRear.set(ControlMode.PercentOutput, rightDriveValue);
+        //this.rightRear.set(ControlMode.PercentOutput, rightDriveValue);
     }
 
     /** This function is called once when the robot is disabled. */
