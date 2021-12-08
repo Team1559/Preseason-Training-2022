@@ -17,11 +17,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
  * project.
  */
 public class Robot extends TimedRobot {
-    TalonSRX          leftFront;
-    TalonSRX          rightFront;
-    //TalonSRX          leftRear;
-    //TalonSRX          rightRear;
-    OperatorInterface oi;
+    TalonSRX          leftMotor;
+    TalonSRX          rightMotor;
+    OperatorInterface operatorInterface;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -29,12 +27,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        this.oi = new OperatorInterface();
-        this.leftFront = new TalonSRX(1);
-        this.leftFront.setInverted(true);
-        this.rightFront = new TalonSRX(7);
-        //this.leftRear = new TalonSRX(2);
-        //this.rightRear = new TalonSRX(3);
+        this.operatorInterface = new OperatorInterface();
+        this.leftMotor = new TalonSRX(1);
+        this.rightMotor = new TalonSRX(7);
+        this.rightMotor.setInverted(true);
     }
 
     /**
@@ -81,35 +77,81 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
+        double driveSpeed = 0.5D;
         // arcade drive
-        double leftStickY = oi.pilot.getRawAxis(1);
-        double rightStickX = oi.pilot.getRawAxis(2);
+        double leftStickY = operatorInterface.pilot.getRawAxis(1);
+        if (leftStickY < 0) {
+            leftStickY = -Math.pow(leftStickY, 2);
+        } else {
+            leftStickY = Math.pow(leftStickY, 2);
+        }
+        double rightStickX = operatorInterface.pilot.getRawAxis(4);
+        if (rightStickX < 0) {
+            rightStickX = -Math.pow(rightStickX, 2);
+        } else {
+            rightStickX = Math.pow(rightStickX, 2);
+        }
         double leftDriveValue;
         double rightDriveValue;
-        if (rightStickX > 0.01D) {
-            // turn right
+        if (rightStickX > 0.1D) {
+            // // turn right
+            // rightDriveValue = leftStickY - rightStickX;
+            // leftDriveValue = leftStickY + rightStickX;
+            // if (rightDriveValue < -1D) {
+            //     leftDriveValue = leftDriveValue + rightDriveValue - 1D;
+            //     rightDriveValue = -1D;
+            // }
+            // if (leftDriveValue > 1D) {
+            //     rightDriveValue = rightDriveValue - leftDriveValue + 1D;
+            //     leftDriveValue = 1D;
+            // }
+
             rightDriveValue = leftStickY - rightStickX;
-            leftDriveValue = leftStickY;
-            if (rightDriveValue < -1D) {
-                leftDriveValue = leftDriveValue + rightDriveValue - 1D;
-                rightDriveValue = -1D;
-            }
-        } else if (rightStickX < -0.01D) {
-            // turn left
             leftDriveValue = leftStickY + rightStickX;
-            rightDriveValue = leftStickY;
-            if (leftDriveValue > 1D) {
-                rightDriveValue = rightDriveValue - leftDriveValue + 1D;
-                leftDriveValue = 1D;
-            }
+        } else if (rightStickX < -0.1D) {
+            // turn left
+            // leftDriveValue = leftStickY + rightStickX;
+            // rightDriveValue = leftStickY - rightStickX;
+            // if (leftDriveValue > 1D) {
+            //     rightDriveValue = rightDriveValue - leftDriveValue + 1D;
+            //     leftDriveValue = 1D;
+            // }
+            // if (rightDriveValue < -1D) {
+            //     leftDriveValue = leftDriveValue + rightDriveValue - 1D;
+            //     rightDriveValue = -1D;
+            // }
+            rightDriveValue = leftStickY + rightStickX;
+            leftDriveValue = leftStickY - rightStickX;
         } else {
             leftDriveValue = leftStickY;
             rightDriveValue = leftStickY;
         }
-        this.leftFront.set(ControlMode.PercentOutput, leftDriveValue);
-        //this.leftRear.set(ControlMode.PercentOutput, leftDriveValue);
-        this.rightFront.set(ControlMode.PercentOutput, rightDriveValue);
-        //this.rightRear.set(ControlMode.PercentOutput, rightDriveValue);
+        if (leftDriveValue < -1D) {
+            double difference = leftDriveValue
+                    / (rightDriveValue == 0D ? -1D : rightDriveValue);
+            leftDriveValue = -1D;
+            rightDriveValue /= difference;
+        } else if (leftDriveValue > 1D) {
+            double difference = leftDriveValue
+                    / (rightDriveValue == 0D ? 1D : rightDriveValue);
+            leftDriveValue = 1D;
+            rightDriveValue /= difference;
+        }
+        if (rightDriveValue < -1D) {
+            double difference = rightDriveValue
+                    / (leftDriveValue == 0D ? -1D : leftDriveValue);
+            rightDriveValue = -1D;
+            leftDriveValue /= difference;
+        } else if (rightDriveValue > 1D) {
+            double difference = rightDriveValue
+                    / (leftDriveValue == 0D ? 1D : leftDriveValue);
+            rightDriveValue = 1D;
+            leftDriveValue /= difference;
+        }
+        leftDriveValue *= driveSpeed;
+        rightDriveValue *= driveSpeed;
+        this.leftMotor.set(ControlMode.PercentOutput, leftDriveValue);
+        this.rightMotor.set(ControlMode.PercentOutput, rightDriveValue);
     }
 
     /** This function is called once when the robot is disabled. */
