@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj.Joystick;
 //Mike, this one's for you to handle
 
 public class DTButton {
-
-    private boolean old, current;
+    private boolean  old;
+    private boolean current;
     private Joystick stick;
     private int button;
 
@@ -36,4 +36,4 @@ public class DTButton {
     public boolean isReleased() {
         return old && !current;
     }
-} 
+}
