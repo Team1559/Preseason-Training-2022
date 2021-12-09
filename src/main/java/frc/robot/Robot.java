@@ -77,76 +77,31 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
+        // current mode: arcade drive
         double driveSpeed = 0.5D;
-        // arcade drive
-        double leftStickY = operatorInterface.pilot.getRawAxis(1);
-        if (leftStickY < 0) {
-            leftStickY = -Math.pow(leftStickY, 2);
-        } else {
-            leftStickY = Math.pow(leftStickY, 2);
-        }
-        double rightStickX = operatorInterface.pilot.getRawAxis(4);
-        if (rightStickX < 0) {
-            rightStickX = -Math.pow(rightStickX, 2);
-        } else {
-            rightStickX = Math.pow(rightStickX, 2);
-        }
+        double leftStickY = operatorInterface.pilotLeftStickY();
+        double rightStickX = operatorInterface.pilotRightStickX();
         double leftDriveValue;
         double rightDriveValue;
         if (rightStickX > 0.1D) {
-            // // turn right
-            // rightDriveValue = leftStickY - rightStickX;
-            // leftDriveValue = leftStickY + rightStickX;
-            // if (rightDriveValue < -1D) {
-            //     leftDriveValue = leftDriveValue + rightDriveValue - 1D;
-            //     rightDriveValue = -1D;
-            // }
-            // if (leftDriveValue > 1D) {
-            //     rightDriveValue = rightDriveValue - leftDriveValue + 1D;
-            //     leftDriveValue = 1D;
-            // }
-
             rightDriveValue = leftStickY - rightStickX;
             leftDriveValue = leftStickY + rightStickX;
         } else if (rightStickX < -0.1D) {
-            // turn left
-            // leftDriveValue = leftStickY + rightStickX;
-            // rightDriveValue = leftStickY - rightStickX;
-            // if (leftDriveValue > 1D) {
-            //     rightDriveValue = rightDriveValue - leftDriveValue + 1D;
-            //     leftDriveValue = 1D;
-            // }
-            // if (rightDriveValue < -1D) {
-            //     leftDriveValue = leftDriveValue + rightDriveValue - 1D;
-            //     rightDriveValue = -1D;
-            // }
             rightDriveValue = leftStickY + rightStickX;
             leftDriveValue = leftStickY - rightStickX;
         } else {
             leftDriveValue = leftStickY;
             rightDriveValue = leftStickY;
         }
-        if (leftDriveValue < -1D) {
-            double difference = leftDriveValue
-                    / (rightDriveValue == 0D ? -1D : rightDriveValue);
-            leftDriveValue = -1D;
-            rightDriveValue /= difference;
-        } else if (leftDriveValue > 1D) {
-            double difference = leftDriveValue
-                    / (rightDriveValue == 0D ? 1D : rightDriveValue);
-            leftDriveValue = 1D;
-            rightDriveValue /= difference;
-        }
-        if (rightDriveValue < -1D) {
-            double difference = rightDriveValue
-                    / (leftDriveValue == 0D ? -1D : leftDriveValue);
-            rightDriveValue = -1D;
-            leftDriveValue /= difference;
-        } else if (rightDriveValue > 1D) {
-            double difference = rightDriveValue
-                    / (leftDriveValue == 0D ? 1D : leftDriveValue);
-            rightDriveValue = 1D;
-            leftDriveValue /= difference;
+        if (Math.abs(rightDriveValue) > 1D || Math.abs(leftDriveValue) > 1D) {
+            double ratio;
+            if (Math.abs(rightDriveValue) > Math.abs(leftDriveValue)) {
+                ratio = Math.abs(1D / rightDriveValue);
+            } else {
+                ratio = Math.abs(1D / leftDriveValue);
+            }
+            rightDriveValue *= ratio;
+            leftDriveValue *= ratio;
         }
         leftDriveValue *= driveSpeed;
         rightDriveValue *= driveSpeed;

@@ -9,89 +9,99 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 
+import static frc.robot.Utils.*;
+
 public class OperatorInterface {
-    Joystick pilot;
-    Joystick copilot;
-    DTButton[]    pilotButtons;
-    DTButton[]    copilotButtons;
-    DTButton[]    cocopilotButtons;
+    Joystick   pilot;
+    Joystick   copilot;
+    DTButton[] pilotButtons;
+    DTButton[] copilotButtons;
+    DTButton[] cocopilotButtons;
 
     public OperatorInterface() {
-        pilot = new Joystick(Constants.PILOT_JOYSTICK);
-        copilot = new Joystick(Constants.COPILOT_JOYSTICK);
-        copilotButtons = new DTButton[20];
-        for (int i = 0; i < copilotButtons.length; i++) {
-            copilotButtons[i] = new DTButton(copilot, i + 1);
-        }
-        pilotButtons = new DTButton[20];
-        for (int i = 0; i < pilotButtons.length; i++) {
-            pilotButtons[i] = new DTButton(pilot, i + 1);
-        }
+        this.pilot = new Joystick(Constants.PILOT_JOYSTICK);
+        this.copilot = new Joystick(Constants.COPILOT_JOYSTICK);
+
+        this.copilotButtons = new DTButton[20];
+        for (int i = 0; i < this.copilotButtons.length; i++)
+            this.copilotButtons[i] = new DTButton(this.copilot, i + 1);
+
+        this.pilotButtons = new DTButton[20];
+        for (int i = 0; i < this.pilotButtons.length; i++)
+            this.pilotButtons[i] = new DTButton(this.pilot, i + 1);
     }
 
-    public double getPilotLeftX() {
-        double pilotX = pilot.getRawAxis(0);
-        // gets the x axis on the ps4 contoller (side to side)
-        if (pilotX > 0D) {
-            // robot with bad grabber and stepper is inverted in the second
-            // statement
-            return Math.pow(pilotX, 2);
-        } else {
-            return -Math.pow(pilotX, 2);
-        }
+    /**
+     * Gets the left joystick x-value on the pilot controller
+     */
+    public double pilotLeftStickX() {
+        return squareKeepSign(this.pilot.getRawAxis(0));
     }
 
-    public double getPilotLeftY() {
-        double pilotY = pilot.getRawAxis(1);
-        // gets the y axis on the ps4 controller (forward and back)
-        if (pilotY > 0D) {
-            return -Math.pow(pilotY, 2);
-        } else {
-            return Math.pow(pilotY, 2);
-        }
+    /**
+     * Gets the left joystick y-value on the pilot controller
+     */
+    public double pilotLeftStickY() {
+        return squareKeepSign(this.pilot.getRawAxis(1));
     }
 
-    public double getPilotRightY() {
-        double pilotZ = pilot.getRawAxis(4);
-        // gets the z axis on the ps4 controller (rotation)
-        if (pilotZ > 0) {
-            return Math.pow(pilotZ, 2);
-        } else {
-            return -Math.pow(pilotZ, 2);
-        }
+    /**
+     * Gets the right joystick x-value on the pilot controller
+     */
+    public double pilotRightStickX() {
+        return squareKeepSign(this.pilot.getRawAxis(4));
     }
 
-    public DTButton getCopilotButton(int num) {
-        // this gets the id number of the button on the copilot box
-        return copilotButtons[num];
+    /**
+     * Gets the right joystick y-value on the pilot controller
+     */
+    public double pilotRightStickY() {
+        return squareKeepSign(this.pilot.getRawAxis(5));
     }
 
+    /**
+     * Gets a copilot button
+     *
+     * @param id
+     *            - the id of the button to get
+     */
+    public DTButton getCopilotButton(int id) {
+        return this.copilotButtons[id];
+    }
+
+    /**
+     * Gets the state of the given button on the copilot controller
+     *
+     * @return {@code true} if pressed, otherwise {@code false}
+     */
     public boolean coButtonIsPressed(int button) {
-        // this will tell us if a button is pressed on the copilot box and
-        // return true
-        return copilot.getRawButton(button);
+        return this.copilot.getRawButton(button);
+    }
+
+    public double getPilotAxis(int num) {
+        return this.pilot.getRawAxis(num);
     }
 
     public double getCopilotAxis(int num) {
         // gets the axis on the copilot box
-        return copilot.getRawAxis(num);
+        return this.copilot.getRawAxis(num);
     }
 
     public DTButton getCocopilotButton(int num) {
         // returns the id num of the copilot box
-        return cocopilotButtons[num];
+        return this.cocopilotButtons[num];
     }
 
     public boolean axisToButtonIsPressed(int axis) {
         // returns true if the axis button is pressed
-        return copilot.getRawAxis(axis) > 0.99D;
+        return this.copilot.getRawAxis(axis) > 0.99D;
     }
 
-    public int DPadPilot() {
-        return pilot.getPOV(0);
+    public int dpadPilot() {
+        return this.pilot.getPOV(0);
     }
 
-    public int DPadCopilot() {
-        return copilot.getPOV(0);
+    public int dpadCopilot() {
+        return this.copilot.getPOV(0);
     }
 }
