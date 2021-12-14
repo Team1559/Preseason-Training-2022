@@ -9,7 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-import static frc.robot.Utils.*;
+import static frc.robot.Constants.squareKeepSign;
 
 public class OperatorInterface {
     Joystick   pilot;

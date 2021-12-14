@@ -1,13 +1,23 @@
 package frc.robot;
 
-/*
- * ALL MEMBERS ARE REQUIRED TO MAINTAIN THIS CLASS This class is meant to store
- * all non-electrical/port values so that they can easily be modified and viewed
- * here. (ints, doubles, booleans ONLY)
+/**
+ * ALL MEMBERS ARE REQUIRED TO MAINTAIN THIS CLASS
+ * <p>
+ * This class is meant to store all non-electrical/port values so that they can
+ * easily be modified and viewed here.
+ * <p>
+ * Also, methods used in multiple places can be stored here as well.
  */
 public final class Constants {
-    public static final int PILOT_JOYSTICK = 0;
+    public static final int PILOT_JOYSTICK   = 0;
     public static final int COPILOT_JOYSTICK = 1;
 
     private Constants() {}
+
+    public static double squareKeepSign(double num) {
+        if (num < 0)
+            return -Math.pow(num, 2);
+        else
+            return Math.pow(num, 2);
+    }
 }
